@@ -15,6 +15,7 @@ def help2md(filepath, output='README.md', name='code'):
         - name - The name of the file. It puts this at the top of the document.
     """
     document = '#' + name + '\n'
+    
     c = imp.load_source(name, filepath)
     doc = inspect.getdoc(c)
     if doc:
@@ -27,14 +28,20 @@ def help2md(filepath, output='README.md', name='code'):
     for i in items:
         item = getattr(c, i)
         if inspect.isfunction(item):
+            doc = inspect.getdoc(item)
+            if doc == None:
+                doc = 'No documentation'
             params = inspect.formatargspec(*inspect.getfullargspec(item))
             document += ('\n\n##' + i + '\n```python\ndef ' + i + params + 
-                ':\n\t"""' + '\n\t'.join(inspect.getdoc(item).split('\n'))
+                ':\n\t"""' + '\n\t'.join(doc.split('\n'))
                 + '"""\n```')
         
         if inspect.isclass(item):
+            doc = inspect.getdoc(item)
+            if doc == None:
+                doc = 'No documentation'
             document += ('\n\n##' + i + '\n```python\nclass ' + i + 
-                '():\n\t"""' + '\n\t'.join(inspect.getdoc(item).split('\n')) 
+                '():\n\t"""' + '\n\t'.join(doc.split('\n')) 
                 + '"""\n```')
             methods = dir(item)
             
@@ -43,9 +50,12 @@ def help2md(filepath, output='README.md', name='code'):
                 if inspect.isfunction(mitem):
                     params = inspect.formatargspec(
                         *inspect.getfullargspec(mitem))
-                    document += ('\n\n###' + i + '\n```python\n\tdef ' + m 
+                    doc = inspect.getdoc(mitem)
+                    if doc == None:
+                        doc = 'No documentation'
+                    document += ('\n\n###' + m + '\n```python\n\tdef ' + m 
                     + params + ':\n\t\t"""' + '\n\t\t'.join(
-                        inspect.getdoc(item).split('\n')) + '"""\n```')
+                        doc.split('\n')) + '"""\n```')
         
         if inspect.ismodule(item):
             modules.append(i)
@@ -57,4 +67,4 @@ def help2md(filepath, output='README.md', name='code'):
     return None
 
 if __name__ == '__main__':
-    help2md('help2md.py', name='Help 2 .md')
+    help2md('/media/steven/Data/Python/sjBot/v8/sjbot.py', 'sjBot.md', name='sjBot')
