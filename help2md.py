@@ -15,7 +15,6 @@ def help2md(filepath, output='README.md', name='code'):
         - name - The name of the file. It puts this at the top of the document.
     """
     document = '#' + name + '\n'
-    
     c = imp.load_source(name, filepath)
     doc = inspect.getdoc(c)
     if doc:
@@ -23,10 +22,12 @@ def help2md(filepath, output='README.md', name='code'):
     else:
         document += '\n'
     
+    main_file = getattr(c, '__file__')
     modules = []
     items = dir(c)
     for i in items:
         item = getattr(c, i)
+
         if inspect.isfunction(item):
             doc = inspect.getdoc(item)
             if doc == None:
@@ -67,4 +68,4 @@ def help2md(filepath, output='README.md', name='code'):
     return None
 
 if __name__ == '__main__':
-    help2md('/media/steven/Data/Python/sjBot/v8/sjbot.py', 'sjBot.md', name='sjBot')
+    help2md('sjbot.py', 'sjBot.md', name='sjBot')
