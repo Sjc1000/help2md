@@ -28,17 +28,24 @@ def help2md(filepath, output='README.md', name='code'):
         item = getattr(c, i)
         if inspect.isfunction(item):
             params = inspect.formatargspec(*inspect.getfullargspec(item))
-            document += '\n\n##def ' + i + params + '\n' + inspect.getdoc(item)
+            document += ('\n\n##' + i + '\n```python\ndef ' + i + params + 
+                ':\n\t"""' + '\n\t'.join(inspect.getdoc(item).split('\n'))
+                + '"""\n```')
         
         if inspect.isclass(item):
-            document += '\n\n##class ' + i + '\n' + str(inspect.getdoc(item))
+            document += ('\n\n##' + i + '\n```python\nclass ' + i + 
+                '():\n\t"""' + '\n\t'.join(inspect.getdoc(item).split('\n')) 
+                + '"""\n```')
             methods = dir(item)
             
             for m in methods:
                 mitem = getattr(item, m)
                 if inspect.isfunction(mitem):
-                    params = inspect.formatargspec(*inspect.getfullargspec(mitem))
-                    document += '\n\n###def ' + m + params + '\n' + inspect.getdoc(mitem)
+                    params = inspect.formatargspec(
+                        *inspect.getfullargspec(mitem))
+                    document += ('\n\n###' + i + '\n```python\n\tdef ' + m 
+                    + params + ':\n\t\t"""' + '\n\t\t'.join(
+                        inspect.getdoc(item).split('\n')) + '"""\n```')
         
         if inspect.ismodule(item):
             modules.append(i)
