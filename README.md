@@ -4,7 +4,8 @@ A function that allows people to convert the help in their python code to a
     .md file. This is useful for places such as github.
 
 
-##```python
+##help2md
+```python
 def help2md(filepath, output='README.md', name='code'):
 help2md
 Converts python help to a .md file.
